@@ -11,38 +11,31 @@ class GildedRose {
         for (Item item : items) {
 
             // Handle Sulfuras
-            if (item.name.equals("Sulfuras, Hand of Ragnaros")) {
+            if (item.name.contains("Sulfuras")) {
                 continue;
             }
 
-            if (!item.name.equals("Aged Brie")
-                && !item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                item.quality = decreaseQuality(item.quality);
-            } else {
+            if (item.name.equals("Aged Brie")) {
                 item.quality = increaseQuality(item.quality);
-
-                if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                    if (item.sellIn < 11) {
-                        item.quality = increaseQuality(item.quality);
-                    }
-
-                    if (item.sellIn < 6) {
-                        item.quality = increaseQuality(item.quality);
-                    }
-                }
+            } else if (item.name.contains("Backstage passes")) {
+                item.quality = increaseQuality(item.quality);
+                if (item.sellIn < 11) item.quality = increaseQuality(item.quality);
+                if (item.sellIn < 6) item.quality = increaseQuality(item.quality);
+            } else {
+                item.quality = decreaseQuality(item.quality);
             }
 
-            item.sellIn = item.sellIn - 1; // Decrease day
+            // Decrease day
+            item.sellIn = item.sellIn - 1;
 
-            if (item.sellIn < 0) { // Sell by date has passed
-                if (!item.name.equals("Aged Brie")) {
-                    if (!item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        item.quality = decreaseQuality(item.quality);
-                    } else {
-                        item.quality = 0;
-                    }
-                } else {
+            // Sell by date has passed
+            if (item.sellIn < 0) {
+                if (item.name.equals("Aged Brie")) {
                     item.quality = increaseQuality(item.quality);
+                } else if (item.name.contains("Backstage passes")) {
+                    item.quality = 0;
+                } else {
+                    item.quality = decreaseQuality(item.quality);
                 }
             }
         }
