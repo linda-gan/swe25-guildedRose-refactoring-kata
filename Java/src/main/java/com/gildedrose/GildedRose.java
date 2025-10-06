@@ -9,34 +9,27 @@ class GildedRose {
 
     public void updateQuality() {
         for (Item item : items) {
-
-            // Handle Sulfuras
             if (item.name.contains("Sulfuras")) {
                 continue;
             }
 
-            if (item.name.equals("Aged Brie")) {
+            boolean isAgedBrie = item.name.equals("Aged Brie");
+            boolean isBackstagePass = item.name.contains("Backstage passes");
+
+            if (isAgedBrie) {
                 item.quality = increaseQuality(item.quality);
-            } else if (item.name.contains("Backstage passes")) {
+                item.sellIn = item.sellIn - 1;
+                if (item.sellIn < 0) item.quality = increaseQuality(item.quality);
+            } else if (isBackstagePass) {
                 item.quality = increaseQuality(item.quality);
                 if (item.sellIn < 11) item.quality = increaseQuality(item.quality);
                 if (item.sellIn < 6) item.quality = increaseQuality(item.quality);
+                item.sellIn = item.sellIn - 1;
+                if (item.sellIn < 0) item.quality = 0;
             } else {
                 item.quality = decreaseQuality(item.quality);
-            }
-
-            // Decrease day
-            item.sellIn = item.sellIn - 1;
-
-            // Sell by date has passed
-            if (item.sellIn < 0) {
-                if (item.name.equals("Aged Brie")) {
-                    item.quality = increaseQuality(item.quality);
-                } else if (item.name.contains("Backstage passes")) {
-                    item.quality = 0;
-                } else {
-                    item.quality = decreaseQuality(item.quality);
-                }
+                item.sellIn = item.sellIn - 1;
+                if (item.sellIn < 0) item.quality = decreaseQuality(item.quality);
             }
         }
     }
